@@ -6,13 +6,14 @@
     android:orientation="vertical"
     tools:context="com.itu.jonathan.tingle.ListActivity"
     android:padding="10dp"
-    android:background="@drawable/bg1">
+    android:background="#ffffff">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_item"
-        android:background="#5e000000"
-        android:headerDividersEnabled="false" />
+        android:headerDividersEnabled="false"
+        android:divider="#ffffff" />
+
 
 </LinearLayout>

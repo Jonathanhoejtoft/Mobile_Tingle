@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         tools:context="com.itu.jonathan.tingle.TingleActivity"
-    android:background="@drawable/bg"
+    android:background="#000000"
     android:padding="10dp">
 
         <!-- Last thing added -->
@@ -17,13 +17,13 @@
             android:layout_width="match_parent"
             android:text="@string/headline"
             android:padding="5px"
-            android:textColor="#151515"
+            android:textColor="#ffffff"
             android:textSize="15dp" />
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:textColor="#151515"
+            android:textColor="#ffffff"
             android:text="Last thing"
             android:id="@+id/last_thing"
             android:textSize="15dp" />
@@ -34,14 +34,16 @@
             android:layout_width="match_parent"
             android:id="@+id/add_button"
             android:text="@string/heading_create"
-            android:background="#bf3c3c" />
+            android:background="@drawable/button_border"
+            android:textColor="#ffffff" />
         <!-- thin horizontal line -->
         <Button
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:id="@+id/search_go_btn_button"
             android:text="@string/heading_search"
-            android:background="#a63535" />
+            android:background="@drawable/button_border"
+            android:textColor="#ffffff" />
 
         <View
             android:layout_width="match_parent"
@@ -59,18 +61,22 @@
                 android:layout_height="match_parent"
                 android:layout_width="100dp"
                 android:text="@string/what_thing"
-                android:paddingTop="25dp" />
+                android:paddingTop="25dp"
+                android:textColor="#ffffff" />
 
             <EditText
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:id="@+id/what_text" />
+                android:id="@+id/what_text"
+                android:textColor="#ffffff" />
 
         </LinearLayout>
         <!-- Where -->
         <LinearLayout android:layout_height="50dp" android:layout_width="match_parent" android:orientation="horizontal">
-            <TextView android:layout_height="match_parent" android:layout_width="100dp" android:text="@string/where"  android:paddingTop="25dp"/>
-            <EditText android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/where_text"/>
+            <TextView android:layout_height="match_parent" android:layout_width="100dp" android:text="@string/where"  android:paddingTop="25dp"
+                android:textColor="#ffffff" />
+            <EditText android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/where_text"
+                android:textColor="#ffffff" />
         </LinearLayout>
 
     </LinearLayout>

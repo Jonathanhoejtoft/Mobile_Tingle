@@ -1,6 +1,9 @@
 package com.itu.jonathan.tingle;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.itu.jonathan.tingle.database.TingleBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,8 @@ import java.util.List;
  */
 public class ThingsDB {
     private static ThingsDB sthingsDB;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
     private List<Thing> mThingsDB;
 
     public static ThingsDB get(Context context){
@@ -29,10 +34,16 @@ public class ThingsDB {
 
 
 
-
-    private ThingsDB(Context context) {
+// old function
+/*    private ThingsDB(Context context) {
         mThingsDB = new ArrayList<Thing>();
         mThingsDB.add(new Thing("skammel","underbordet"));
         mThingsDB.add(new Thing("sko","hylde"));
+    }*/
+// using a db
+        private ThingsDB(Context context) {
+        mContext = context.getApplicationContext();
+        mDatabase = new TingleBaseHelper(mContext).getWritableDatabase();
+        mThingsDB = new ArrayList<Thing>();
     }
 }
