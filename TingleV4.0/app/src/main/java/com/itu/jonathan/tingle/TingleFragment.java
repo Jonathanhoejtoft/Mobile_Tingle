@@ -1,13 +1,16 @@
 package com.itu.jonathan.tingle;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.itu.jonathan.tingle.database.TingleBaseHelper;
+import com.itu.jonathan.tingle.database.TingleDBSchema;
+
+import java.util.List;
 
 
 public class TingleFragment extends Fragment {
@@ -29,6 +37,8 @@ public class TingleFragment extends Fragment {
     //fake database
     //private List<Thing> thingsDB;
     private static ThingsDB thingsDB;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +52,7 @@ public class TingleFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_tingle,container,false);
         lastAdded = (TextView) v.findViewById(R.id.last_thing);
-        updateUI();
+        //updateUI();
 
         // Button
         addThing = (Button) v.findViewById(R.id.add_button);
@@ -61,12 +71,36 @@ public class TingleFragment extends Fragment {
             public void onClick(View view) {
                 if ((newWhat.getText().length() > 0) && (newWhere.getText().length() > 0
                 )) {
-                    thingsDB.addThing(
-                            new Thing(newWhat.getText().toString(),
-                                    newWhere.getText().toString()));
+
+                    TingleBaseHelper db = new TingleBaseHelper(getActivity());
+
+                    /**
+                     * CRUD Operations
+                     * */
+                    // Inserting Contacts
+                    Log.d("Insert: ", "Inserting ..");
+                    db.addTing(new Thing(newWhat.getText().toString(), newWhere.getText().toString()));
+
+                    Log.d("Reading: ", "Reading all contacts..");
+                    List<Thing> things = db.getAllThings();
+
+                    for (Thing tn : things) {
+                        String log = " Ting: " + tn.getWhat() + " ,Lokation: " + tn.getWhere();
+                        // Writing Contacts to log
+                        Log.d("Ting: ", log);
+                    }
+                    /*ContentValues values = new ContentValues();
+                    values.put(TingleDBSchema.TingleTable.Cols.UUID, "x1");
+                    values.put(TingleDBSchema.TingleTable.Cols.TING, newWhat.getText().toString());
+                    values.put(TingleDBSchema.TingleTable.Cols.LOCATION, newWhere.getText().toString());
+
+                    mDatabase.insert(TingleDBSchema.TingleTable.NAME,null,values);*/
+                    //thingsDB.addThing(
+                            //new Thing(newWhat.getText().toString(), newWhere.getText().toString()));
+
                     newWhat.setText("");
                     newWhere.setText("");
-                    updateUI();
+                    //updateUI();
                     ((TingleActivity)getActivity()).UpdateList();
                 }
             }
@@ -129,12 +163,16 @@ public class TingleFragment extends Fragment {
 
 
     }
-    private void updateUI() {
+
+
+/*    private void updateUI() {
         int s = thingsDB.size();
 
         if (s > 0) {
             lastAdded.setText(thingsDB.get(s - 1).toString());
         }
 
-    }
+    }*/
+
+
 }

@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.itu.jonathan.tingle.database.TingleBaseHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +38,25 @@ public class ListFragment extends Fragment {
         for (Thing t : thingsDB.getThingsDB()) {
             list.add(t.toString());
         }
+
+        // test
+        TingleBaseHelper db = new TingleBaseHelper(getActivity());
+
+        List<Thing> thing = new ArrayList<Thing>();
+        thing= db.getAllThings();
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, thing);
+        //listContent.setAdapter(adapter);
+        // test
+
         // setting arrayadapter
         //ArrayAdapter<Thing> arrayAdapter;
 
         //Thingslist.setAdapter(arrayAdapter);
-        arrayAdapter = new ThingAdapter(getActivity(), (ArrayList)thingsDB.getThingsDB());
+       // arrayAdapter = new ThingAdapter(getActivity(), (ArrayList) thingsDB.getThingsDB());
 
         Thingslist = (ListView) v.findViewById(R.id.list_item);
-        Thingslist.setAdapter(arrayAdapter);
+        Thingslist.setAdapter(adapter);
+
         Thingslist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

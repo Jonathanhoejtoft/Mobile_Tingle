@@ -1,9 +1,12 @@
 package com.itu.jonathan.tingle;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.Settings;
 
 import com.itu.jonathan.tingle.database.TingleBaseHelper;
+import com.itu.jonathan.tingle.database.TingleDBSchema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,8 @@ public class ThingsDB {
     private static ThingsDB sthingsDB;
     private Context mContext;
     private SQLiteDatabase mDatabase;
-    private List<Thing> mThingsDB;
+    //private List<Thing> mThingsDB;
+
 
     public static ThingsDB get(Context context){
         if(sthingsDB == null){
@@ -24,13 +28,21 @@ public class ThingsDB {
         return sthingsDB;
 
     }
-    public List<Thing> getThingsDB() {return mThingsDB;}
-    public void addThing (Thing thing){mThingsDB.add(thing);}
-    public int size(){return mThingsDB.size();}
-    public void removeThing(int index){
-        mThingsDB.remove(index);
+    public List<Thing> getThingsDB() {
+        //return mThingsDB;
+        return new ArrayList<>();
     }
-    public Thing get(int i){ return mThingsDB.get(i);}
+
+    public void addThing (Thing thing){
+        //mThingsDB.add(thing);
+    }
+
+
+
+    //public int size(){return mThingsDB.size();}
+
+    public void removeThing(int index){ mDatabase.delete(TingleDBSchema.TingleTable.NAME, " _id ="+index,null);    }
+    //public Thing get(int i){ return mThingsDB.get(i);}
 
 
 
@@ -44,6 +56,6 @@ public class ThingsDB {
         private ThingsDB(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new TingleBaseHelper(mContext).getWritableDatabase();
-        mThingsDB = new ArrayList<Thing>();
+        //mThingsDB = new ArrayList<Thing>();
     }
 }
