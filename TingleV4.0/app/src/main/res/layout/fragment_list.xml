@@ -1,0 +1,18 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.itu.jonathan.tingle.ListActivity"
+    android:padding="10dp"
+    android:background="@drawable/bg1">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list_item"
+        android:background="#5e000000"
+        android:headerDividersEnabled="false" />
+
+</LinearLayout>
