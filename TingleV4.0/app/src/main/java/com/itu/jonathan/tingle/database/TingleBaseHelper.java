@@ -3,8 +3,10 @@ package com.itu.jonathan.tingle.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.itu.jonathan.tingle.Thing;
 import com.itu.jonathan.tingle.database.TingleDBSchema.TingleTable;
@@ -52,6 +54,24 @@ public class TingleBaseHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
+    public void deleteThing(Thing thing) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(Table_name, "_id" + " = ?",
+                new String[] { String.valueOf(thing.getID()) });
+        //db.delete(Table_name, "id" + "=" + rowID, null);
+        db.close();
+    }
+
+    public boolean deleteTing(long rowID) {
+
+            SQLiteDatabase db = this.getWritableDatabase();
+            return db.delete(Table_name, "_id" + "=" + rowID, null) > 0;
+
+
+
+    }
+
 
     public List<Thing> getAllThings() {
         List<Thing> thingList = new ArrayList<Thing>();
@@ -65,6 +85,7 @@ public class TingleBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Thing thing = new Thing("test","test");
+                thing.setID(cursor.getInt(0));
                 thing.setUUID(cursor.getInt(1));
                 thing.setWhat(cursor.getString(2));
                 thing.setWhere(cursor.getString(3));

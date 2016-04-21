@@ -110,9 +110,9 @@ public class TingleFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Find entry");
+                builder.setTitle("Find a thing");
                 builder.setIcon(android.R.drawable.ic_dialog_info);
-                builder.setMessage("Type in the entry item to find its location");
+                builder.setMessage("Write the thing you want to find");
 
                 // Set up the input
                 final EditText input = new EditText(getActivity());
