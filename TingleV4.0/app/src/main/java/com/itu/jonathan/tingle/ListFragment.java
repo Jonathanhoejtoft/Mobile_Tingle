@@ -23,7 +23,8 @@ import java.util.List;
 public class ListFragment extends Fragment {
     private static ThingsDB thingsDB;
     private ListView Thingslist;
-    private ArrayAdapter arrayAdapter ;
+    private ArrayAdapter arrayAdapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class ListFragment extends Fragment {
                                 db.close();*/
 
                                 //db.deleteThing(delID);
-                                Thingslist.invalidateViews();
+                                //Thingslist.invalidateViews();
                                 //ListFragment.this.UpdateList();
 
                             }

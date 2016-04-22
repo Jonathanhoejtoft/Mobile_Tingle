@@ -63,5 +63,19 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/button_border"
             android:textColor="#ffffff" />
+
+
+        <Button android:text="Scan QR Code" android:id="@+id/scanner"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_border">
+        </Button>
+        <Button android:text="Scan BAR Code" android:id="@+id/scanner2"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center" android:layout_gravity="right"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_border">
+        </Button>
     </LinearLayout>
 </RelativeLayout>

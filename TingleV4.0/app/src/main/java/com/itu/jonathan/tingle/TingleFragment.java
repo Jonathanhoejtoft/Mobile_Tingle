@@ -1,6 +1,8 @@
 package com.itu.jonathan.tingle;
 
-import android.app.AlertDialog;
+import android.app.*;
+import android.app.ListFragment;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,9 +13,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,6 +32,8 @@ import java.util.List;
 public class TingleFragment extends Fragment {
 
     // GUI variables
+    private Button ScannerQR;
+    private Button ScannerBarcode;
     private Button addThing;
     private Button searchThing;
     private Button Listbtn;
@@ -39,6 +45,7 @@ public class TingleFragment extends Fragment {
     private static ThingsDB thingsDB;
     private Context mContext;
     private SQLiteDatabase mDatabase;
+    private ArrayAdapter arrayAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,38 @@ public class TingleFragment extends Fragment {
         newWhat = (TextView) v.findViewById(R.id.what_text);
         newWhere = (TextView) v.findViewById(R.id.where_text);
         //searchT = (TextView) v.findViewById(R.id.search_text);
+
+        // scanner code here
+        ScannerQR = (Button)v.findViewById(R.id.scanner);
+        ScannerBarcode = (Button)v.findViewById(R.id.scanner2);
+        try {
+            //ScannerQR = (Button)v.findViewById(R.id.scanner);
+
+            ScannerQR.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                    intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+                    startActivityForResult(intent, 0);
+                }
+
+            });
+
+            //ScannerBarcode = (Button)v.findViewById(R.id.scanner2);
+            ScannerBarcode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                    intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
+                    startActivityForResult(intent,0);
+                }
+
+            });
+
+        } catch (ActivityNotFoundException anfe) {
+            Log.e("onCreate", "Scanner Not Found", anfe);
+        }
+        // end scanner code
 
         // view products click event
         addThing.setOnClickListener(new View.OnClickListener() {
@@ -97,11 +136,12 @@ public class TingleFragment extends Fragment {
                     mDatabase.insert(TingleDBSchema.TingleTable.NAME,null,values);*/
                     //thingsDB.addThing(
                             //new Thing(newWhat.getText().toString(), newWhere.getText().toString()));
-
+                    //arrayAdapter.notifyDataSetChanged();
                     newWhat.setText("");
                     newWhere.setText("");
                     //updateUI();
-                    ((TingleActivity)getActivity()).UpdateList();
+
+                            ((TingleActivity) getActivity()).UpdateList();
                 }
             }
         });
@@ -163,7 +203,24 @@ public class TingleFragment extends Fragment {
 
 
     }
-
+@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 0) {
+            if (resultCode == getActivity().RESULT_OK) {
+                String contents = intent.getStringExtra("SCAN_RESULT");
+                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+// Handle successful scan
+                Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP, 25, 400);
+                toast.show();
+            } else if (resultCode == getActivity().RESULT_CANCELED) {
+// Handle cancel
+                Toast toast = Toast.makeText(getActivity(), "Scan was Cancelled!", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP, 25, 400);
+                toast.show();
+            }
+        }
+    }
 
 /*    private void updateUI() {
         int s = thingsDB.size();

@@ -1,10 +1,13 @@
 package com.itu.jonathan.tingle;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 
 public class TingleActivity extends FragmentActivity {
@@ -41,10 +44,12 @@ public class TingleActivity extends FragmentActivity {
         }
     }
 
+
     void UpdateList()
     {
         if (fragmentList != null)
             ((ListFragment)fragmentList).UpdateList();
     }
+
 
 }
