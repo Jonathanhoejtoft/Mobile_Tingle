@@ -20,12 +20,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.itu.jonathan.tingle.database.TingleBaseHelper;
 import com.itu.jonathan.tingle.database.TingleDBSchema;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -106,16 +108,68 @@ public class TingleFragment extends Fragment {
 
         // view products click event
         addThing.setOnClickListener(new View.OnClickListener() {
+
+            /* add thing in dialog */
             @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Add a thing");
+                builder.setIcon(android.R.drawable.ic_dialog_info);
+                builder.setMessage("Write the thing you want to add");
+
+                Context context = getActivity();
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                final EditText inputTing = new EditText(context);
+                inputTing.setHint("What thing?");
+                layout.addView(inputTing);
+
+                final EditText inputHvor = new EditText(context);
+                inputHvor.setHint("Where");
+                layout.addView(inputHvor);
+
+/*                // Set up the input
+                final EditText input = new EditText(getActivity());
+                final EditText input = new EditText(getActivity());*/
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                //input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+                builder.setView(layout);
+
+                // Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TingleBaseHelper db = new TingleBaseHelper(getActivity());
+                        try{
+                            db.addTing(new Thing(inputTing.getText().toString(), inputHvor.getText().toString()));
+                            Toast.makeText(getActivity(),"Added: " + inputTing.getText() + " to database", Toast.LENGTH_LONG).show();
+                        }
+                        catch (Exception ex){
+                            Toast.makeText(getActivity(),"Failed to add!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+
+/*            @Override
             public void onClick(View view) {
                 if ((newWhat.getText().length() > 0) && (newWhere.getText().length() > 0
                 )) {
 
                     TingleBaseHelper db = new TingleBaseHelper(getActivity());
 
-                    /**
+                    *//**
                      * CRUD Operations
-                     * */
+                     * *//*
                     // Inserting Contacts
                     Log.d("Insert: ", "Inserting ..");
                     db.addTing(new Thing(newWhat.getText().toString(), newWhere.getText().toString()));
@@ -128,12 +182,12 @@ public class TingleFragment extends Fragment {
                         // Writing Contacts to log
                         Log.d("Ting: ", log);
                     }
-                    /*ContentValues values = new ContentValues();
+                    *//*ContentValues values = new ContentValues();
                     values.put(TingleDBSchema.TingleTable.Cols.UUID, "x1");
                     values.put(TingleDBSchema.TingleTable.Cols.TING, newWhat.getText().toString());
                     values.put(TingleDBSchema.TingleTable.Cols.LOCATION, newWhere.getText().toString());
 
-                    mDatabase.insert(TingleDBSchema.TingleTable.NAME,null,values);*/
+                    mDatabase.insert(TingleDBSchema.TingleTable.NAME,null,values);*//*
                     //thingsDB.addThing(
                             //new Thing(newWhat.getText().toString(), newWhere.getText().toString()));
                     //arrayAdapter.notifyDataSetChanged();
@@ -143,7 +197,7 @@ public class TingleFragment extends Fragment {
 
                             ((TingleActivity) getActivity()).UpdateList();
                 }
-            }
+            }*/
         });
         // searchThing
         searchThing.setOnClickListener(new View.OnClickListener() {
@@ -164,9 +218,10 @@ public class TingleFragment extends Fragment {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        TingleBaseHelper db = new TingleBaseHelper(getActivity());
 
                         Thing t = null;
-                        for (Thing d : thingsDB.getThingsDB()) {
+                        for (Thing d : db.getAllThings()) {
                             if (d.getWhat() != null && d.getWhat().contains(input.getText().toString())) {
                                 t = d;
                                 break;
@@ -189,6 +244,7 @@ public class TingleFragment extends Fragment {
                 builder.show();
             }
         });
+
         Listbtn = (Button) v.findViewById(R.id.Listbtn);
         if (Listbtn != null) {
             Listbtn.setOnClickListener(new View.OnClickListener() {
