@@ -12,21 +12,14 @@
     android:padding="10dp">
 
         <!-- Last thing added -->
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="@string/headline"
-            android:padding="5px"
-            android:textColor="#ffffff"
-            android:textSize="15dp" />
+    <TextView android:layout_height="53dp" android:layout_width="match_parent" android:text="@string/headline"
+        android:padding="5px"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="38dp"
+        android:background="#ffffff"
+        android:textStyle="bold" />
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textColor="#ffffff"
-            android:text="Last thing"
-            android:id="@+id/last_thing"
-            android:textSize="15dp" />
 
         <!-- Button to add new thing-->
         <Button
@@ -65,32 +58,9 @@
 
 
         <!-- What new thing -->
-        <LinearLayout
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:orientation="horizontal">
 
-            <TextView
-                android:layout_height="match_parent"
-                android:layout_width="100dp"
-                android:text="@string/what_thing"
-                android:paddingTop="25dp"
-                android:textColor="#ffffff" />
-
-            <EditText
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:id="@+id/what_text"
-                android:textColor="#ffffff" />
-
-        </LinearLayout>
         <!-- Where -->
-        <LinearLayout android:layout_height="50dp" android:layout_width="match_parent" android:orientation="horizontal">
-            <TextView android:layout_height="match_parent" android:layout_width="100dp" android:text="@string/where"  android:paddingTop="25dp"
-                android:textColor="#ffffff" />
-            <EditText android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/where_text"
-                android:textColor="#ffffff" />
-        </LinearLayout>
+
 
     </LinearLayout>
 

@@ -60,7 +60,7 @@ public class TingleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_tingle,container,false);
-        lastAdded = (TextView) v.findViewById(R.id.last_thing);
+        //lastAdded = (TextView) v.findViewById(R.id.last_thing);
         //updateUI();
 
         // Button
@@ -70,8 +70,8 @@ public class TingleFragment extends Fragment {
 
         // Textfields for describing a thing
 
-        newWhat = (TextView) v.findViewById(R.id.what_text);
-        newWhere = (TextView) v.findViewById(R.id.where_text);
+        //newWhat = (TextView) v.findViewById(R.id.what_text);
+        //newWhere = (TextView) v.findViewById(R.id.where_text);
         //searchT = (TextView) v.findViewById(R.id.search_text);
 
         // scanner code here
@@ -263,17 +263,48 @@ public class TingleFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
             if (resultCode == getActivity().RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+               final String contents = intent.getStringExtra("SCAN_RESULT");
+               final String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
 // Handle successful scan
-                TingleBaseHelper db = new TingleBaseHelper(getActivity());
+                //TingleBaseHelper db = new TingleBaseHelper(getActivity());
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Scanned Code");
+                builder.setIcon(android.R.drawable.ic_dialog_info);
+                builder.setMessage("Write the location");
+
+                // Set up the input
+                final EditText input = new EditText(getActivity());
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+                builder.setView(input);
+                // Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TingleBaseHelper db = new TingleBaseHelper(getActivity());
+                        Log.d("Insert: ", "Inserting ..");
+                        db.addTing(new Thing(contents, input.getText().toString()));
+                        Toast toast = Toast.makeText(getActivity(), "Scanned:" + contents + " Is here:" + input.getText().toString() , Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP, 25, 400);
+                        toast.show();
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
                 /**
                  * CRUD Operations
                  * */
                 // Inserting Contacts
-                Log.d("Insert: ", "Inserting ..");
-                db.addTing(new Thing(contents, format));
+/*                Log.d("Insert: ", "Inserting ..");
+                db.addTing(new Thing(contents, format));*/
 
                 Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.TOP, 25, 400);
