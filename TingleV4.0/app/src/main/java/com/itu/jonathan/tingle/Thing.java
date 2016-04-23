@@ -32,7 +32,8 @@ public class Thing {
     }
 
     @Override
-    public String toString() { return oneLine("id:","UUID:", "Item: ","is here: "); }
+    //public String toString() { return oneLine("id:","UUID:", "Item: ","is here: "); }
+    public String toString() { return oneLine("id: "," Item: "," is here: "); }
     public String getWhat() { return mWhat; }
     public int getID(){return mID; }
     public void setID(int id){mID = id; }
@@ -41,7 +42,8 @@ public class Thing {
     public int getUUID() { return mUUID; }
     public void setUUID(int UUID) { mUUID = UUID; }
     public void setWhere(String where) { mWhere = where; }
-    public String oneLine(String id, String uid, String pre, String post) {return id+mID + " " +  uid+mUUID + " " + pre+mWhat + " "+post + mWhere;
+    //public String oneLine(String id, String uid, String pre, String post) {return id+mID + " " +  uid+mUUID + " " + pre+mWhat + " "+post + mWhere;
+    public String oneLine(String id, String pre, String post) {return id+mID + " " + pre+mWhat + " "+post + mWhere;
     }
 
 }

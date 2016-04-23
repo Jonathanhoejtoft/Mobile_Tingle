@@ -86,7 +86,7 @@ public class TingleBaseHelper extends SQLiteOpenHelper {
             do {
                 Thing thing = new Thing("test","test");
                 thing.setID(cursor.getInt(0));
-                thing.setUUID(cursor.getInt(1));
+               // thing.setUUID(cursor.getInt(1));
                 thing.setWhat(cursor.getString(2));
                 thing.setWhere(cursor.getString(3));
                 // Adding contact to list
