@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.itu.jonathan.tingle.database.TingleBaseHelper;
@@ -22,8 +23,9 @@ import java.util.List;
 
 public class ListFragment extends Fragment {
     private static ThingsDB thingsDB;
-    private ListView Thingslist;
+    public ListView Thingslist;
     private ArrayAdapter arrayAdapter;
+    private SearchView searchV;
 
 
     @Override
@@ -57,14 +59,28 @@ public class ListFragment extends Fragment {
        // arrayAdapter = new ThingAdapter(getActivity(), (ArrayList) thingsDB.getThingsDB());
 
         Thingslist = (ListView) v.findViewById(R.id.list_item);
+        searchV = (SearchView) v.findViewById(R.id.seachfilter);
         Thingslist.setAdapter(arrayAdapter);
+
+        searchV.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+                arrayAdapter.getFilter().filter(text);
+                return false;
+            }
+        });
 
         Thingslist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
                 //Thing thing = (Thing) Thingslist.getItemAtPosition(position);
                 final int savePosition = position;
-                final long delID = id+1;
+                final long delID = id;
 
                 new AlertDialog.Builder(getActivity())
                         .setTitle("Delete entry")

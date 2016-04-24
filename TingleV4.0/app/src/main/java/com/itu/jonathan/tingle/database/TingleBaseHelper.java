@@ -7,8 +7,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.itu.jonathan.tingle.Thing;
+import com.itu.jonathan.tingle.TingleFragment;
 import com.itu.jonathan.tingle.database.TingleDBSchema.TingleTable;
 
 import java.util.ArrayList;
@@ -42,16 +44,25 @@ public class TingleBaseHelper extends SQLiteOpenHelper {
     }
 
     public void addTing(Thing thing) {
+
+
+
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(TingleTable.Cols.UUID,"uuid1"); // Contact Name
-        values.put(TingleTable.Cols.TING, thing.getWhat()); //
-        values.put(TingleTable.Cols.LOCATION, thing.getWhere()); //
 
-        // Inserting Row
-        db.insert(Table_name, null, values);
-        db.close(); // Closing database connection
+
+
+
+
+                ContentValues values = new ContentValues();
+                values.put(TingleTable.Cols.UUID,"uuid1"); // Contact Name
+                values.put(TingleTable.Cols.TING, thing.getWhat()); //
+                values.put(TingleTable.Cols.LOCATION, thing.getWhere()); //
+
+                // Inserting Row
+           db.insertWithOnConflict(Table_name, null, values,SQLiteDatabase.CONFLICT_REPLACE);
+                db.close(); // Closing database connection
+
     }
 
     public void deleteThing(Thing thing) {

@@ -5,7 +5,6 @@
     <string name="what_thing">What thing?</string>
     <string name="where">Where?</string>
     <string name="heading_search">Search</string>
-    <string name="f" />
     <string name="search_thing">Search:</string>
     <string name="error_none_found">Not found in the database</string>
 

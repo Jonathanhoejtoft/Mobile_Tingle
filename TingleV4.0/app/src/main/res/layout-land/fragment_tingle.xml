@@ -29,7 +29,8 @@
             android:background="@drawable/button_border"
             android:textColor="#ffffff"
             android:layout_marginTop="20px"
-            android:layout_marginBottom="12px"/>
+            android:layout_marginBottom="12px"
+            android:drawableLeft="@drawable/add"/>
         <!-- thin horizontal line -->
         <Button
             android:layout_height="wrap_content"
@@ -39,7 +40,8 @@
             android:background="@drawable/button_border"
             android:textColor="#ffffff"
             android:layout_marginTop="12px"
-            android:layout_marginBottom="12px"/>
+            android:layout_marginBottom="12px"
+            android:drawableLeft="@drawable/search"/>
 
     <Button android:text="Scan QR Code" android:id="@+id/scanner"
         android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -47,7 +49,8 @@
         android:textColor="#ffffff"
         android:background="@drawable/button_border"
         android:layout_marginTop="12px"
-        android:layout_marginBottom="12px">
+        android:layout_marginBottom="12px"
+        android:drawableLeft="@drawable/qr">
     </Button>
 
 
@@ -58,7 +61,8 @@
         android:textColor="#ffffff"
         android:background="@drawable/button_border"
         android:layout_marginTop="12px"
-        android:layout_marginBottom="12px">
+        android:layout_marginBottom="12px"
+        android:drawableLeft="@drawable/barcode">
     </Button>
     <!-- seach for a thing -->
 

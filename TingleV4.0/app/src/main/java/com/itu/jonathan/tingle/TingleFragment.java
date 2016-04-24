@@ -20,10 +20,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,12 +56,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+
 
 
 public class TingleFragment extends Fragment {
@@ -79,6 +77,7 @@ public class TingleFragment extends Fragment {
     private SQLiteDatabase mDatabase;
     private ArrayAdapter arrayAdapter;
     public String scanResult;
+    public int scanstatus = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,30 +88,6 @@ public class TingleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-        //sendPOST("https://api.outpan.com/v2/products/[GTIN]/name?apikey=[YOUR API KEY]")
-
-/*        RequestQueue MyRequestQueue = Volley.newRequestQueue(getActivity());
-        String url = "http://yourdomain.com/path";
-        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                //This code is executed if the server responds, whether or not the response contains data.
-                //The String 'response' contains the server's response.
-            }
-        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //This code is executed if there is an error.
-            }
-        }) {
-            protected Map<String, String> getParams() {
-                Map<String, String> MyData = new HashMap<String, String>();
-                MyData.put("Field", "Value"); //Add the data you'd like to send to the server.
-                return MyData;
-            }
-        };
-        MyRequestQueue.add(MyStringRequest);*/
 
         View v = inflater.inflate(R.layout.fragment_tingle,container,false);
         //lastAdded = (TextView) v.findViewById(R.id.last_thing);
@@ -196,13 +171,20 @@ public class TingleFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         TingleBaseHelper db = new TingleBaseHelper(getActivity());
-                        try{
+                        try {
                             db.addTing(new Thing(inputTing.getText().toString(), inputHvor.getText().toString()));
-                            Toast.makeText(getActivity(),"Added: " + inputTing.getText() + " to database", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Added: " + inputTing.getText() + " to database", Toast.LENGTH_LONG).show();
+                            TingleActivity upd = new TingleActivity();
+                            upd.UpdateList();
+                        } catch (Exception ex) {
+                            Toast.makeText(getActivity(), "Failed to add!", Toast.LENGTH_LONG).show();
                         }
-                        catch (Exception ex){
-                            Toast.makeText(getActivity(),"Failed to add!", Toast.LENGTH_LONG).show();
-                        }
+
+                        //ListView list = (ListView) getActivity().findViewById(R.id.list_item);
+//                        ((BaseAdapter)list.getAdapter()).notifyDataSetChanged();
+
+
+
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -212,7 +194,9 @@ public class TingleFragment extends Fragment {
                     }
                 });
 
+
                 builder.show();
+
             }
 
 /*            @Override
@@ -314,116 +298,166 @@ public class TingleFragment extends Fragment {
 
 
     }
+
     public EditText input;
     public EditText input2;
-@Override
+    public EditText inputqr;
+    public String ScanType;
+
+
+    int carljo = 0;
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
             if (resultCode == getActivity().RESULT_OK) {
+
                final String contents = intent.getStringExtra("SCAN_RESULT");
                final String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                String string1 = "QR_CODE";
+                String string2 = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                scanResult = contents;
+
 // Handle successful scan
-                //TingleBaseHelper db = new TingleBaseHelper(getActivity());
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Scanned Code");
-                builder.setIcon(android.R.drawable.ic_dialog_info);
-                builder.setMessage("Write location: ");
 
 
 
-                if(scanResult == null){
-                    Toast toast = Toast.makeText(getActivity(), "Not found or scan failure: " + scanResult, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP, 25, 400);
-                    toast.show();
-                    LinearLayout layout = new LinearLayout(getActivity());
-                    layout.setOrientation(LinearLayout.VERTICAL);
-
-                    input = new EditText(getActivity());
-                    input.setHint("What thing?");
-                    layout.addView(input);
-
-                    input2 = new EditText(getActivity());
-                    input2.setHint("Where");
-                    layout.addView(input2);
-
-                    builder.setView(layout);
-
-                }
-                else{
-                    Toast toast = Toast.makeText(getActivity(), "Scanned item: " + scanResult, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP, 25, 400);
-                    toast.show();
-
-                    input = new EditText(getActivity());
-                    input.setHint("What thing?");
-
-                    builder.setView(input);
-
-                }
-                // Set up the input
+                if(format != null) {
 
 
-                // excecute outpan lookup for barcode
+                    //TingleBaseHelper db = new TingleBaseHelper(getActivity());
+                    ScanType = format.toLowerCase();
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Scanned Code:" + ScanType);
+                    builder.setIcon(android.R.drawable.ic_dialog_info);
+                    builder.setMessage("Write location: " + scanResult);
+String checkval = "null";
+                    if (scanResult != null) {
+                        Toast toast = Toast.makeText(getActivity(), "scanned " + scanResult + ":id::" + scanstatus, Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP, 25, 400);
+                        toast.show();
 
-                String stringUrl = "https://api.outpan.com/v2/products/"+contents+"?apikey=ce347520123d90a02979d155e6d5e6c5";
-                //String stringUrlPost = "https://api.outpan.com/v2/products/"+contents+"/"+input.getText().toString()+"?apikey=ce347520123d90a02979d155e6d5e6c5";
-                ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnected()) {
-                        new DownloadWebpageTask().execute(stringUrl);
-
-                } else {
-                    Toast toast = Toast.makeText(getActivity(), "No network connection available", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP, 25, 400);
-                    toast.show();
-                }
-
-                // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        builder.setMessage("");
-                        TingleBaseHelper db = new TingleBaseHelper(getActivity());
-                        Log.d("Insert: ", "Inserting ..");
-                        if(scanResult == null){
-
-                            String param = input.getText().toString();
-                            ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
-                            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                            if (networkInfo != null && networkInfo.isConnected()) {
-                                new PostnewItem().execute("https://api.outpan.com/v2/products/" + contents + "/name?apikey=ce347520123d90a02979d155e6d5e6c5", param);
-                            }
-                            db.addTing(new Thing(input.getText().toString(), input2.getText().toString()));
+                            LinearLayout layout = new LinearLayout(getActivity());
+                            layout.setOrientation(LinearLayout.VERTICAL);
+                        if(string1.compareTo(string2) == 0){
+                            carljo = 1; // qr
+                            input = new EditText(getActivity());
+                            input.setHint("What thing?");
+                            layout.addView(input);
                         }
-                        else {
-                            db.addTing(new Thing(scanResult, input.getText().toString()));
+                        else{
+                            carljo = 2;
+                            input = new EditText(getActivity());
+                            input.setHint("What thing?");
+                            layout.addView(input);
+
+                            input2 = new EditText(getActivity());
+                            input2.setHint("Where");
+                            layout.addView(input2);
                         }
 
-                        Toast toast = Toast.makeText(getActivity(), "Scanned:" + scanResult + " Is here:" + input.getText().toString()  , Toast.LENGTH_LONG);
+                            builder.setView(layout);
+
+                        Toast toast1 = Toast.makeText(getActivity(), "Scanned Barcode: " + scanResult+ "id:" +carljo , Toast.LENGTH_LONG);
+                        toast1.setGravity(Gravity.TOP, 25, 400);
+                        toast1.show();
+
+
+
+
+                    }
+                     /*else if(carljo ==1) {
+                        Toast toast = Toast.makeText(getActivity(), "Scanned QR: " + scanResult +carljo , Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP, 25, 400);
+                        toast.show();
+
+                    }*/
+                    else {
+                        Toast toast = Toast.makeText(getActivity(), "Scanned Barcode: " + scanResult +carljo , Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.TOP, 25, 400);
                         toast.show();
 
                     }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
 
-                builder.show();
-                /**
-                 * CRUD Operations
-                 * */
-                // Inserting Contacts
+                    // Set up the input
+
+
+                    // excecute outpan lookup for barcode
+
+                    String stringUrl = "https://api.outpan.com/v2/products/" + contents + "?apikey=ce347520123d90a02979d155e6d5e6c5";
+
+                    ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                    if (networkInfo != null && networkInfo.isConnected() && carljo ==2 ) {
+                        new DownloadWebpageTask().execute(stringUrl);
+
+                    } else {
+                        Toast toast = Toast.makeText(getActivity(), "No network connection available", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP, 25, 400);
+                        toast.show();
+                    }
+
+                    // Set up the buttons
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            builder.setMessage("");
+                            TingleBaseHelper db = new TingleBaseHelper(getActivity());
+                            Log.d("Insert: ", "Inserting ..");
+
+                            if(carljo ==1) {
+                                db.addTing(new Thing(contents, input.getText().toString()));
+                            }
+                            else if(carljo ==2){
+                                String temp1 = "null";
+                                if (scanResult.compareTo(temp1) == 0) {
+
+                                    String param = input.getText().toString();
+                                    ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+                                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                                    if (networkInfo != null && networkInfo.isConnected()) {
+                                        new PostnewItem().execute("https://api.outpan.com/v2/products/" + contents + "/name?apikey=ce347520123d90a02979d155e6d5e6c5", param);
+                                    }
+                                    db.addTing(new Thing(input.getText().toString(), input2.getText().toString()));
+                                } else {
+                                    db.addTing(new Thing(scanResult, input.getText().toString()));
+
+                                }
+                            }
+
+
+
+                            Toast toast = Toast.makeText(getActivity(), "Scanned:" + scanResult + " Is here:" + input.getText().toString(), Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP, 25, 400);
+                            toast.show();
+
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                    /**
+                     * CRUD Operations
+                     * */
+                    // Inserting Contacts
 /*                Log.d("Insert: ", "Inserting ..");
                 db.addTing(new Thing(contents, format));*/
 
-                Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP, 25, 400);
-               // toast.show();
+                    //Toast toast = Toast.makeText(getActivity(), "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
+                    //toast.setGravity(Gravity.TOP, 25, 400);
+                    // toast.show();
+                }
+                else{
+                    Toast toast = Toast.makeText(getActivity(), "simulated qr " + scanResult, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 25, 400);
+                    toast.show();
+                }
+
+                // end code here
             } else if (resultCode == getActivity().RESULT_CANCELED) {
 // Handle cancel
                 Toast toast = Toast.makeText(getActivity(), "Scan was Cancelled!", Toast.LENGTH_LONG);
@@ -498,10 +532,13 @@ private String getInfo(String myurl) throws IOException {
         //JSON parser
         try {
             JSONObject jObject = new JSONObject(contentAsString);
-            if (jObject.getString("name") == "null") {
-                scanResult = null;
+            String temp = "null";
+            if (jObject.getString("name").equals(temp)) {
+                scanResult = "null";
+                scanstatus = 0;
             } else {
                 scanResult = jObject.getString("name");
+                scanstatus = 1;
             }
         }
         catch (JSONException e) {
@@ -517,30 +554,7 @@ private String getInfo(String myurl) throws IOException {
         }
     }
 }
-    private String postInfo(String myurl) throws IOException {
-        InputStream is = null;
 
-        try {
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-            Log.d("HttpExample", "The Post response is: " + response);
-
-            return response + "ex";
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
-        }
-        catch (Exception ex){
-
-        }
-        return "sucess";
-    }
     public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
@@ -564,29 +578,35 @@ private String getInfo(String myurl) throws IOException {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            String aJsonString= null;
-/*            scanResult = null;
-            //JSON parser
+
             try {
                 JSONObject jObject = new JSONObject(result);
-                if(jObject.getString("name") == "null"){
-                    scanResult = null;
+                String temp = jObject.getString("name");
+
+                if(temp.contains("null")){
+                    Toast toast = Toast.makeText(getActivity(), "Scan result: NULL" + scanResult + " result:" + temp, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 25, 400);
+                    toast.show();
+                    scanstatus = 0;
                 }
                 else{
-                    scanResult = jObject.getString("name");
+                    Toast toast = Toast.makeText(getActivity(), "Scan sucess:" + scanResult + " result:" + temp, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 25, 400);
+                    toast.show();
+                    scanstatus = 1;
                 }
 
 
-            } catch (JSONException e) {
+
+            }
+            catch (JSONException e) {
                 throw new RuntimeException(e);
-            }*/
+            }
 
 
 
 
-/*            Toast toast = Toast.makeText(getActivity(), "Result:" + scanResult, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.TOP, 25, 400);
-            toast.show();*/
+
 
         }
     }
@@ -613,5 +633,6 @@ private String getInfo(String myurl) throws IOException {
 
         }
     }
+
 
 }

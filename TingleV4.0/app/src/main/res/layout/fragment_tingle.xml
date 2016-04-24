@@ -27,7 +27,8 @@
             android:layout_weight="0.15"
             android:layout_marginTop="30px"
             android:layout_marginBottom="20px"
-        />
+            android:drawableLeft="@drawable/add"
+            android:padding="10dp" />
 
         <Button android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/search_go_btn_button" android:text="@string/heading_search"
             android:background="@drawable/button_border"
@@ -35,6 +36,8 @@
             android:layout_weight="0.15"
             android:layout_marginTop="20px"
             android:layout_marginBottom="20px"
+            android:drawableLeft="@drawable/search"
+            android:padding="10dp"
         />
 
         <Button
@@ -48,6 +51,8 @@
             android:layout_weight="0.15"
             android:layout_marginTop="20px"
             android:layout_marginBottom="20px"
+            android:drawableLeft="@drawable/list"
+            android:padding="10dp"
         />
 
         <Button android:text="Scan QR Code" android:id="@+id/scanner"
@@ -58,6 +63,8 @@
             android:layout_weight="0.15"
             android:layout_marginTop="20px"
             android:layout_marginBottom="20px"
+            android:drawableLeft="@drawable/qr"
+            android:padding="10dp"
         />
 
         <Button android:text="Scan BAR Code" android:id="@+id/scanner2"
@@ -68,6 +75,7 @@
             android:layout_weight="0.15"
             android:layout_marginTop="20px"
             android:layout_marginBottom="20px"
+            android:drawableLeft="@drawable/barcode"
         />
 
     </LinearLayout>
