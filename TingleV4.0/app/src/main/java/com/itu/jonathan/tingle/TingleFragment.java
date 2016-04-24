@@ -314,6 +314,8 @@ public class TingleFragment extends Fragment {
 
 
     }
+    public EditText input;
+    public EditText input2;
 @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
@@ -327,10 +329,13 @@ public class TingleFragment extends Fragment {
                 builder.setTitle("Scanned Code");
                 builder.setIcon(android.R.drawable.ic_dialog_info);
                 builder.setMessage("Write location: ");
-                final EditText input;
-                final EditText input2;
 
-                if(scanResult == "null"){
+
+
+                if(scanResult == null){
+                    Toast toast = Toast.makeText(getActivity(), "Not found or scan failure: " + scanResult, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 25, 400);
+                    toast.show();
                     LinearLayout layout = new LinearLayout(getActivity());
                     layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -346,14 +351,14 @@ public class TingleFragment extends Fragment {
 
                 }
                 else{
-                    LinearLayout layout = new LinearLayout(getActivity());
-                    layout.setOrientation(LinearLayout.VERTICAL);
+                    Toast toast = Toast.makeText(getActivity(), "Scanned item: " + scanResult, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 25, 400);
+                    toast.show();
 
                     input = new EditText(getActivity());
                     input.setHint("What thing?");
-                    layout.addView(input);
 
-                    builder.setView(layout);
+                    builder.setView(input);
 
                 }
                 // Set up the input
@@ -367,7 +372,7 @@ public class TingleFragment extends Fragment {
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
                         new DownloadWebpageTask().execute(stringUrl);
-                    new PostnewItem().execute("https://api.outpan.com/v2/products/7622100920212/name?apikey=ce347520123d90a02979d155e6d5e6c5");
+
                 } else {
                     Toast toast = Toast.makeText(getActivity(), "No network connection available", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 25, 400);
@@ -381,22 +386,21 @@ public class TingleFragment extends Fragment {
                         builder.setMessage("");
                         TingleBaseHelper db = new TingleBaseHelper(getActivity());
                         Log.d("Insert: ", "Inserting ..");
-                        if(scanResult == "null"){
-                            String test = input.getText().toString();
-                            try{
-                                //sendPOST();
-                            }
-                            catch (Exception ex){
+                        if(scanResult == null){
 
+                            String param = input.getText().toString();
+                            ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+                            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                            if (networkInfo != null && networkInfo.isConnected()) {
+                                new PostnewItem().execute("https://api.outpan.com/v2/products/" + contents + "/name?apikey=ce347520123d90a02979d155e6d5e6c5", param);
                             }
-
-                            db.addTing(new Thing(contents, input.getText().toString()));
+                            db.addTing(new Thing(input.getText().toString(), input2.getText().toString()));
                         }
-                        else{
+                        else {
                             db.addTing(new Thing(scanResult, input.getText().toString()));
                         }
 
-                        Toast toast = Toast.makeText(getActivity(), "Scanned:" + scanResult + " Is here:" + input.getText().toString() , Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getActivity(), "Scanned:" + scanResult + " Is here:" + input.getText().toString()  , Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.TOP, 25, 400);
                         toast.show();
 
@@ -429,16 +433,16 @@ public class TingleFragment extends Fragment {
         }
     }
 
-    private String sendPOST(String POST_URL) throws IOException {
+    private String sendPOST(String POST_URL, String POST_PARAMS) throws IOException {
         URL obj = new URL(POST_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", "Mozilla/5.0");
-        String POST_PARAMS = "name=Marlboro";
+        String POST_ARGS = "name="+POST_PARAMS;
         // For POST only - START
         con.setDoOutput(true);
         OutputStream os = con.getOutputStream();
-        os.write(POST_PARAMS.getBytes());
+        os.write(POST_ARGS.getBytes());
         os.flush();
         os.close();
         // For POST only - END
@@ -491,6 +495,18 @@ private String getInfo(String myurl) throws IOException {
         // Convert the InputStream into a string
         String contentAsString =  readIt(is, len);
         Log.d("contentAsString: ",contentAsString);
+        //JSON parser
+        try {
+            JSONObject jObject = new JSONObject(contentAsString);
+            if (jObject.getString("name") == "null") {
+                scanResult = null;
+            } else {
+                scanResult = jObject.getString("name");
+            }
+        }
+        catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         return contentAsString;
 
         // Makes sure that the InputStream is closed after the app is
@@ -549,11 +565,12 @@ private String getInfo(String myurl) throws IOException {
         @Override
         protected void onPostExecute(String result) {
             String aJsonString= null;
+/*            scanResult = null;
             //JSON parser
             try {
                 JSONObject jObject = new JSONObject(result);
                 if(jObject.getString("name") == "null"){
-                    scanResult = "null";
+                    scanResult = null;
                 }
                 else{
                     scanResult = jObject.getString("name");
@@ -562,14 +579,14 @@ private String getInfo(String myurl) throws IOException {
 
             } catch (JSONException e) {
                 throw new RuntimeException(e);
-            }
+            }*/
 
 
 
 
-            Toast toast = Toast.makeText(getActivity(), "Result:" + scanResult, Toast.LENGTH_LONG);
+/*            Toast toast = Toast.makeText(getActivity(), "Result:" + scanResult, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.TOP, 25, 400);
-            toast.show();
+            toast.show();*/
 
         }
     }
@@ -579,7 +596,7 @@ private String getInfo(String myurl) throws IOException {
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                return sendPOST(urls[0]);
+                return sendPOST(urls[0],urls[1]);
                 //return postInfo(urls[0]);
             } catch (IOException e) {
                 return "Unable to retrieve web page. URL may be invalid.";
