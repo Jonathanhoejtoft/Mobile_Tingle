@@ -77,6 +77,7 @@ public class TingleFragment extends Fragment {
     private SQLiteDatabase mDatabase;
     private ArrayAdapter arrayAdapter;
     public String scanResult;
+    public String superResult;
     public int scanstatus = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -332,16 +333,16 @@ public class TingleFragment extends Fragment {
                     builder.setMessage("Write location: " + scanResult);
 String checkval = "null";
                     if (scanResult != null) {
-                        Toast toast = Toast.makeText(getActivity(), "scanned " + scanResult + ":id::" + scanstatus, Toast.LENGTH_LONG);
+/*                        Toast toast = Toast.makeText(getActivity(), "scanned " + scanResult + ":id::" + scanstatus, Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.TOP, 25, 400);
-                        toast.show();
+                        toast.show();*/
 
                             LinearLayout layout = new LinearLayout(getActivity());
                             layout.setOrientation(LinearLayout.VERTICAL);
                         if(string1.compareTo(string2) == 0){
                             carljo = 1; // qr
                             input = new EditText(getActivity());
-                            input.setHint("What thing?");
+                            input.setHint("What thing (qr)?");
                             layout.addView(input);
                         }
                         else{
@@ -357,9 +358,9 @@ String checkval = "null";
 
                             builder.setView(layout);
 
-                        Toast toast1 = Toast.makeText(getActivity(), "Scanned Barcode: " + scanResult+ "id:" +carljo , Toast.LENGTH_LONG);
+              /*          Toast toast1 = Toast.makeText(getActivity(), "Scanned Barcode: " + scanResult+ "id:" +carljo , Toast.LENGTH_LONG);
                         toast1.setGravity(Gravity.TOP, 25, 400);
-                        toast1.show();
+                        toast1.show();*/
 
 
 
@@ -372,9 +373,9 @@ String checkval = "null";
 
                     }*/
                     else {
-                        Toast toast = Toast.makeText(getActivity(), "Scanned Barcode: " + scanResult +carljo , Toast.LENGTH_LONG);
+                    /*    Toast toast = Toast.makeText(getActivity(), "Scanned Barcode: " + scanResult +carljo , Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.TOP, 25, 400);
-                        toast.show();
+                        toast.show();*/
 
                     }
 
@@ -419,14 +420,14 @@ String checkval = "null";
                                     }
                                     db.addTing(new Thing(input.getText().toString(), input2.getText().toString()));
                                 } else {
-                                    db.addTing(new Thing(scanResult, input.getText().toString()));
+                                    db.addTing(new Thing(scanResult, input2.getText().toString()));
 
                                 }
                             }
 
 
 
-                            Toast toast = Toast.makeText(getActivity(), "Scanned:" + scanResult + " Is here:" + input.getText().toString(), Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(getActivity(), "Inserted:" + scanResult + "" + input.getText().toString(), Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.TOP, 25, 400);
                             toast.show();
 
@@ -452,9 +453,9 @@ String checkval = "null";
                     // toast.show();
                 }
                 else{
-                    Toast toast = Toast.makeText(getActivity(), "simulated qr " + scanResult, Toast.LENGTH_LONG);
+/*                    Toast toast = Toast.makeText(getActivity(), "simulated qr " + scanResult, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 25, 400);
-                    toast.show();
+                    toast.show();*/
                 }
 
                 // end code here
@@ -584,13 +585,13 @@ private String getInfo(String myurl) throws IOException {
                 String temp = jObject.getString("name");
 
                 if(temp.contains("null")){
-                    Toast toast = Toast.makeText(getActivity(), "Scan result: NULL" + scanResult + " result:" + temp, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getActivity(), "Scan result is NULL:(" + scanResult + ")", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 25, 400);
                     toast.show();
                     scanstatus = 0;
                 }
                 else{
-                    Toast toast = Toast.makeText(getActivity(), "Scan sucess:" + scanResult + " result:" + temp, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getActivity(), "Scan success:(" + scanResult + ")", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 25, 400);
                     toast.show();
                     scanstatus = 1;
@@ -630,6 +631,7 @@ private String getInfo(String myurl) throws IOException {
             Toast toast = Toast.makeText(getActivity(), "Result:" + result, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.TOP, 25, 400);
             toast.show();
+            superResult = result;
 
         }
     }
