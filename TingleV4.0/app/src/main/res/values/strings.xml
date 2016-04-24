@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Tingle 4.0</string>
-    <string name="headline">Last thing added</string>
+    <string name="headline">Add thing</string>
     <string name="heading_create">Add</string>
     <string name="what_thing">What thing?</string>
     <string name="where">Where?</string>

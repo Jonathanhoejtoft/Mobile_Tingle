@@ -9,15 +9,14 @@
         android:orientation="vertical"
         tools:context="com.itu.jonathan.tingle.TingleActivity"
     android:background="#000000"
-    android:padding="10dp">
+    android:padding="0dp">
 
         <!-- Last thing added -->
     <TextView android:layout_height="53dp" android:layout_width="match_parent" android:text="@string/headline"
         android:padding="5px"
         android:textAlignment="center"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="38dp"
-        android:background="#ffffff"
         android:textStyle="bold" />
 
 
@@ -28,7 +27,9 @@
             android:id="@+id/add_button"
             android:text="@string/heading_create"
             android:background="@drawable/button_border"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="12px"/>
         <!-- thin horizontal line -->
         <Button
             android:layout_height="wrap_content"
@@ -36,25 +37,30 @@
             android:id="@+id/search_go_btn_button"
             android:text="@string/heading_search"
             android:background="@drawable/button_border"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:layout_marginTop="12px"
+            android:layout_marginBottom="12px"/>
 
     <Button android:text="Scan QR Code" android:id="@+id/scanner"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="#ffffff"
-        android:background="@drawable/button_border">
-    </Button>
-    <Button android:text="Scan BAR Code" android:id="@+id/scanner2"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:gravity="center" android:layout_gravity="right"
-        android:textColor="#ffffff"
-        android:background="@drawable/button_border">
+        android:background="@drawable/button_border"
+        android:layout_marginTop="12px"
+        android:layout_marginBottom="12px">
     </Button>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-        <!-- seach for a thing -->
+
+
+    <Button android:text="Scan BAR Code" android:id="@+id/scanner2"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:background="@drawable/button_border"
+        android:layout_marginTop="12px"
+        android:layout_marginBottom="12px">
+    </Button>
+    <!-- seach for a thing -->
 
 
         <!-- What new thing -->
